@@ -109,6 +109,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+//	DONT CONNECT ADC TO 5V POWER!!!!!!   Max ADC voltage range is just 3.3V 	//
+
+	  //in while loop because we want to manually set up the continuous ADC
+      HAL_ADC_Start(&hadc1);
+      HAL_ADC_PollForConversion(&hadc1, 100);	//timeout in 100ms
+      ADC_VAL = HAL_ADC_GetValue(&hadc1);	//retrieve the raw ADC values
+      HAL_ADC_Stop(&hadc1);
+
+      scaledValue = map(ADC_VAL, 0, 4095, 0, 100);	//maps 0 to 2^12-1
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+      HAL_Delay (500);	//500ms delay, manually sets the ADC to run at 2Hz
+
   }
   /* USER CODE END 3 */
 }
@@ -225,6 +238,7 @@ static void MX_ADC1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
@@ -232,6 +246,16 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
