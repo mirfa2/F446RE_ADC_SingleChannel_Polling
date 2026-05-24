@@ -120,7 +120,7 @@ int main(void)
 
       scaledValue = map(ADC_VAL, 0, 4095, 0, 100);	//maps 0 to 2^12-1
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-      HAL_Delay (500);	//500ms delay, manually sets the ADC to run at 2Hz
+      HAL_Delay(500);	//500ms delay, manually sets the ADC to run at 2Hz
 
   }
   /* USER CODE END 3 */
