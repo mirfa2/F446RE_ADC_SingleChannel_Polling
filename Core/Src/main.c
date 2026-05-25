@@ -57,6 +57,17 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+	//ADC_Clock_Frequency = Internal_Bus_Peripheral_Clock_Freq / ADC_Prescaler
+	//ADC_Conversion_Time = (Sampling_Cycles + Conversion_Cycles) / ADC_Clock_Frequency
+	//ADC_Sampling_Rate = 1/ADC_Conversion_Time
+
+	//eg: ADC1 connected to APB1, let APB1 peripheral clock = 4 Mhz and ADC_Prescaler = 6
+	//	  ADC_Clock_Freq = 666.67 kHz
+	//	  Sampling_Cycles is selected in the ADC setting, min 3
+	//	  Conversion_Cycles depends on MCU and ADC resolution, for F446RE, 12bit ADC requires 12 cycles
+	//	  let Sampling_Cycles = 480, and 12bit ADC, then ADC_Conversion_Time = 492/666.67kHz = 738 us
+	//	  ADC_Sampling_Rate = 1/738us = 1353 samples per seconds
+
 uint16_t ADC_VAL = 0;	//we're using 12 bit ADC, we need atleast 16bit to store the raw ADC value [0–4095]
 int scaledValue = 0;	//maps the raw ADC value to more convenient value eg [0-100]
 
